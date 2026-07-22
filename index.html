@@ -4,6 +4,14 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Aube — suivi de sobriété</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0d0c22">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Aube">
+<link rel="icon" href="icons/favicon-32.png" sizes="32x32">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,500;9..144,600;9..144,700&family=Work+Sans:wght@400;500;600;700&display=swap');
 
@@ -136,6 +144,20 @@
   .stat .s-num{font-family:'Fraunces', serif;font-size:1.55rem;color:var(--dawn-soft);}
   .stat .s-lbl{font-size:0.72rem;color:var(--paper-dim);text-transform:uppercase;letter-spacing:0.06em;margin-top:0.2rem;}
 
+  .contact-list{list-style:none;margin:0 0 0.7rem;padding:0;display:flex;flex-direction:column;gap:0.5rem;}
+  .contact-item{display:flex;align-items:center;justify-content:space-between;gap:0.6rem;
+    background:rgba(255,255,255,0.03);border:1px solid var(--hair);border-radius:10px;padding:0.55rem 0.8rem;}
+  .contact-item .c-info{display:flex;flex-direction:column;}
+  .contact-item .c-name{font-size:0.86rem;font-weight:600;}
+  .contact-item .c-phone{font-size:0.76rem;color:var(--paper-dim);}
+  .contact-item button{background:none;border:none;color:var(--paper-dim);cursor:pointer;font-size:1rem;padding:0.2rem;border-radius:6px;}
+  .contact-item button:hover{color:var(--rose);background:rgba(216,140,154,0.1);}
+  .contact-item a.c-call{flex-shrink:0;background:var(--rose);color:var(--night-deep);text-decoration:none;
+    border-radius:8px;padding:0.45rem 0.75rem;font-weight:600;font-size:0.8rem;white-space:nowrap;}
+  .backup-row{display:flex;gap:0.5rem;margin-top:0.3rem;}
+  .backup-row button{flex:1;}
+  .file-input-hidden{display:none;}
+
   .settings-toggle{text-align:center;margin-top:0.4rem;}
   .settings-toggle button{background:none;border:none;color:var(--paper-dim);font-size:0.8rem;
     cursor:pointer;padding:0.5rem 1rem;border-radius:20px;transition:all 0.2s ease;}
@@ -214,6 +236,41 @@
   a.call-btn{display:flex;align-items:center;justify-content:center;gap:0.5rem;background:var(--rose);color:var(--night-deep);
     text-decoration:none;border-radius:10px;padding:0.75rem;font-weight:600;font-size:0.92rem;margin-top:0.5rem;}
 
+  /* --- Helplines --- */
+  .helpline-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:0.6rem;}
+  .helpline-item{display:flex;align-items:center;justify-content:space-between;gap:0.7rem;
+    background:rgba(216,140,154,0.07);border:1px solid rgba(216,140,154,0.3);border-radius:12px;
+    padding:0.7rem 0.9rem;}
+  .helpline-item .h-info{display:flex;flex-direction:column;gap:0.15rem;}
+  .helpline-item .h-name{font-size:0.86rem;font-weight:600;color:var(--paper);}
+  .helpline-item .h-avail{font-size:0.72rem;color:var(--paper-dim);}
+  .helpline-item a.h-call{
+    flex-shrink:0;background:var(--rose);color:var(--night-deep);text-decoration:none;
+    border-radius:8px;padding:0.5rem 0.8rem;font-weight:600;font-size:0.82rem;white-space:nowrap;
+  }
+
+  /* --- Mood check-in --- */
+  .mood-row{display:flex;justify-content:space-between;gap:0.4rem;margin-bottom:0.6rem;}
+  .mood-btn{flex:1;background:rgba(255,255,255,0.03);border:1px solid var(--hair);border-radius:14px;
+    padding:0.7rem 0.2rem;font-size:1.4rem;cursor:pointer;transition:all 0.2s ease;}
+  .mood-btn:hover{border-color:rgba(232,178,77,0.4);background:rgba(232,178,77,0.06);}
+  .mood-btn.selected{border-color:var(--dawn);background:rgba(232,178,77,0.14);transform:scale(1.05);}
+  .mood-done-note{font-size:0.84rem;color:var(--paper-dim);font-style:italic;}
+  .mood-warning{
+    background:rgba(216,140,154,0.1);border:1px solid rgba(216,140,154,0.35);border-radius:14px;
+    padding:0.9rem 1rem;font-size:0.86rem;line-height:1.5;margin-top:0.8rem;display:flex;flex-direction:column;gap:0.5rem;
+  }
+  .mood-warning a.sos-link{align-self:flex-start;color:var(--dawn-soft);font-weight:600;text-decoration:none;font-size:0.84rem;}
+  .mood-warning a.sos-link:hover{text-decoration:underline;}
+
+  /* --- Activity picker (SOS) --- */
+  .activity-box{
+    background:rgba(122,155,118,0.09);border:1px solid rgba(122,155,118,0.35);border-radius:16px;
+    padding:1.1rem;text-align:center;margin-top:0.9rem;
+  }
+  .activity-box .a-label{font-size:0.7rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--paper-dim);margin-bottom:0.4rem;}
+  .activity-box .a-text{font-family:'Fraunces', serif;font-size:1.05rem;min-height:1.6rem;margin-bottom:0.7rem;}
+
   #confetti-layer{position:fixed;inset:0;pointer-events:none;z-index:50;overflow:hidden;}
   .confetti-piece{position:absolute;top:-20px;border-radius:2px;animation:fall linear forwards;}
   @keyframes fall{to{transform:translateY(110vh) rotate(540deg);opacity:0.3;}}
@@ -266,6 +323,22 @@
 
     <div class="milestones" id="milestones"></div>
 
+    <div class="card fade-in" style="animation-delay:0.08s;">
+      <h2>🌤️ Comment tu te sens aujourd'hui ?</h2>
+      <div class="mood-row" id="mood-row">
+        <button class="mood-btn" data-mood="1">😞</button>
+        <button class="mood-btn" data-mood="2">😕</button>
+        <button class="mood-btn" data-mood="3">😐</button>
+        <button class="mood-btn" data-mood="4">🙂</button>
+        <button class="mood-btn" data-mood="5">😄</button>
+      </div>
+      <p class="mood-done-note" id="mood-done-note"></p>
+      <div class="mood-warning hidden" id="mood-warning">
+        <span id="mood-warning-text"></span>
+        <a class="sos-link" data-tab="sos" href="#">🆘 Aller au SOS →</a>
+      </div>
+    </div>
+
     <div class="card fade-in" style="animation-delay:0.1s;">
       <h2>🌅 Citation du jour</h2>
       <div class="quote-wrap"><p class="quote-text" id="quote"></p></div>
@@ -286,6 +359,8 @@
       <div class="stat-grid">
         <div class="stat"><div class="s-icon">💰</div><div class="s-num" id="stat-money">—</div><div class="s-lbl">économisé</div></div>
         <div class="stat"><div class="s-icon">🗓️</div><div class="s-num" id="stat-weeks">0</div><div class="s-lbl">semaines</div></div>
+        <div class="stat"><div class="s-icon">🏅</div><div class="s-num" id="stat-best">0</div><div class="s-lbl">record personnel</div></div>
+        <div class="stat"><div class="s-icon">💧</div><div class="s-num" id="stat-checkins">0</div><div class="s-lbl">jours suivis</div></div>
       </div>
     </div>
 
@@ -305,10 +380,25 @@
         <input type="number" id="cost-input" placeholder="Ex : 15" min="0" step="0.5">
         <button class="ghost" id="save-cost">Enregistrer</button>
       </div>
-      <label style="font-size:0.85rem;color:var(--paper-dim);display:block;margin-bottom:0.35rem;">Contact de confiance (numéro, pour le bouton SOS)</label>
-      <div class="row">
-        <input type="tel" id="contact-input" placeholder="Ex : 819-479-4593">
-        <button class="ghost" id="save-contact">Enregistrer</button>
+      <label style="font-size:0.85rem;color:var(--paper-dim);display:block;margin-bottom:0.35rem;">Contacts de confiance (pour le bouton SOS)</label>
+      <ul class="contact-list" id="contact-list"></ul>
+      <div class="row" style="margin-bottom:1.1rem;">
+        <input type="text" id="contact-name-input" placeholder="Nom" style="flex:0.8;">
+        <input type="tel" id="contact-phone-input" placeholder="Numéro">
+        <button class="primary" id="add-contact">Ajouter</button>
+      </div>
+
+      <label style="font-size:0.85rem;color:var(--paper-dim);display:block;margin-bottom:0.35rem;">Activités personnalisées (SOS)</label>
+      <div class="row" style="margin-bottom:1.1rem;">
+        <input type="text" id="activity-input" placeholder="Ex : Appeler mon parrain" maxlength="80">
+        <button class="ghost" id="add-activity">Ajouter</button>
+      </div>
+
+      <label style="font-size:0.85rem;color:var(--paper-dim);display:block;margin-bottom:0.35rem;">Sauvegarde de tes données</label>
+      <div class="backup-row">
+        <button class="ghost" id="export-data">⬇️ Exporter</button>
+        <button class="ghost" id="import-data-btn">⬆️ Importer</button>
+        <input type="file" id="import-data-file" class="file-input-hidden" accept="application/json">
       </div>
     </div>
   </div>
@@ -350,12 +440,18 @@
     </div>
 
     <div class="card">
-      <h2>💬 100 affirmations</h2>
+      <h2>💬 5100 affirmations</h2>
       <div class="affirm-filter">
-        <button class="active" id="filter-all">Toutes</button>
+        <button class="active" id="filter-all">Classiques</button>
         <button id="filter-fav">☆ Favorites</button>
+        <button id="filter-explore">🔎 Explorer (5000+)</button>
       </div>
+      <div class="row hidden" id="explore-search-row" style="margin-bottom:0.7rem;">
+        <input type="text" id="explore-search" placeholder="Chercher un mot (ex : respirer, aide, patience...)">
+      </div>
+      <p class="empty-note hidden" id="explore-count-note"></p>
       <ul class="affirm-list" id="affirm-list"></ul>
+      <button class="ghost hidden" id="explore-load-more" style="width:100%;margin-top:0.7rem;">Afficher plus</button>
     </div>
   </div>
 
@@ -378,10 +474,56 @@
       <div class="text" id="sos-reason-text">Ajoute une raison dans l'accueil pour qu'elle apparaisse ici.</div>
     </div>
 
+    <div class="activity-box">
+      <div class="a-label">Le temps mort passe plus vite occupé</div>
+      <div class="a-text" id="activity-text">Touche le bouton pour piger une idée</div>
+      <button class="ghost" id="activity-shuffle">🔀 Je m'ennuie, propose-moi quelque chose</button>
+    </div>
+
+    <div class="sos-reason-highlight" id="sos-streak-box" style="border-color:rgba(122,155,118,0.35);background:rgba(122,155,118,0.09);">
+      <div class="label">Tu as déjà tenu</div>
+      <div class="text" id="sos-streak-text">—</div>
+    </div>
+
     <div class="card">
-      <h2>📞 Appeler quelqu'un</h2>
-      <p class="lead" id="sos-contact-empty">Ajoute un contact de confiance dans les Réglages (onglet Accueil) pour pouvoir l'appeler en un tap ici.</p>
-      <a class="call-btn hidden" id="sos-call-btn" href="#">📞 Appeler mon contact</a>
+      <h2>📞 Lignes d'aide (Québec)</h2>
+      <p class="lead">Disponibles en tout temps, gratuites et confidentielles.</p>
+      <ul class="helpline-list">
+        <li class="helpline-item">
+          <div class="h-info">
+            <span class="h-name">Drogue: aide et référence</span>
+            <span class="h-avail">24/7 · Québec · 1 800 265-2626</span>
+          </div>
+          <a class="h-call" href="tel:+18002652626">📞 Appeler</a>
+        </li>
+        <li class="helpline-item">
+          <div class="h-info">
+            <span class="h-name">Info-Social (option 2)</span>
+            <span class="h-avail">24/7 · Québec · 811</span>
+          </div>
+          <a class="h-call" href="tel:811">📞 Appeler</a>
+        </li>
+        <li class="helpline-item">
+          <div class="h-info">
+            <span class="h-name">1 866 APPELLE (détresse / suicide)</span>
+            <span class="h-avail">24/7 · Québec · 277-3553</span>
+          </div>
+          <a class="h-call" href="tel:+18662773553">📞 Appeler</a>
+        </li>
+        <li class="helpline-item">
+          <div class="h-info">
+            <span class="h-name">988 — Ligne de prévention du suicide</span>
+            <span class="h-avail">24/7 · Canada</span>
+          </div>
+          <a class="h-call" href="tel:988">📞 Appeler</a>
+        </li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h2>📞 Appeler un proche</h2>
+      <p class="lead" id="sos-contact-empty">Ajoute un ou plusieurs contacts de confiance dans les Réglages (onglet Accueil) pour pouvoir les appeler en un tap ici.</p>
+      <ul class="contact-list" id="sos-contact-list"></ul>
     </div>
   </div>
 
@@ -397,7 +539,19 @@
 
 <script>
 const STORAGE_KEY = 'aube-data';
-let data = { startDate: null, reasons: [], dailyCost: null, lastMilestoneCelebrated: 0, favorites: [], emergencyContact: '' };
+let data = { startDate: null, reasons: [], dailyCost: null, lastMilestoneCelebrated: 0, favorites: [], emergencyContact: '', checkins: [], contacts: [], bestStreak: 0, streakHistory: [], customActivities: [] };
+
+function migrateData(){
+  // Migration douce : ancien contact unique -> liste de contacts
+  if(data.emergencyContact && (!data.contacts || data.contacts.length === 0)){
+    data.contacts = [{ name: 'Contact de confiance', phone: data.emergencyContact }];
+  }
+  data.contacts = data.contacts || [];
+  data.streakHistory = data.streakHistory || [];
+  data.customActivities = data.customActivities || [];
+  data.bestStreak = data.bestStreak || 0;
+  data.checkins = data.checkins || [];
+}
 
 const useClaudeStorage = (typeof window.storage !== 'undefined');
 
@@ -513,6 +667,134 @@ const MILESTONES = [
   {d:365, icon:'🏆', label:'1 an'}
 ];
 
+const ACTIVITIES = [
+  "Marche dehors 15 minutes, peu importe la météo",
+  "Appelle ou texte quelqu'un juste pour jaser",
+  "Prends une douche froide de 30 secondes à la fin",
+  "Fais 20 push-ups ou un mini entraînement rapide",
+  "Range ou nettoie un seul espace (tiroir, table, char)",
+  "Écris ce que tu ressens là, maintenant, sans te juger",
+  "Écoute une chanson qui te fait du bien, à fond",
+  "Prépare-toi un vrai repas, même simple",
+  "Va prendre l'air sur un balcon ou dehors 5 minutes",
+  "Regarde une vidéo de la section Vidéos d'Aube",
+  "Bois un grand verre d'eau lentement",
+  "Fais une liste de 3 choses que tu veux accomplir demain",
+  "Étire-toi 5 minutes, lentement",
+  "Prends une marche jusqu'au dépanneur pour une collation, pas autre chose",
+  "Joue à un jeu ou regarde un épisode d'une série que t'aimes"
+];
+let lastActivityIndex = -1;
+
+/* ---------- GÉNÉRATEUR DE 5000 AFFIRMATIONS ----------
+   Plutôt que d'écrire 5000 lignes à la main (répétitif et peu utile
+   passé un certain point), on combine 50 phrases-gabarits avec 100
+   verbes/expressions à l'infinitif : 50 × 100 = 5000 affirmations
+   uniques, générées à la volée. Le fichier reste léger et le contenu
+   grammaticalement cohérent, car chaque gabarit est écrit pour
+   accueillir n'importe quel infinitif de la banque. */
+const AFFIRM_VERBS = [
+  "respirer profondément","avancer un peu plus loin aujourd'hui","te pardonner pour hier",
+  "recommencer sans honte","demander de l'aide","prendre soin de toi",
+  "choisir la sobriété encore aujourd'hui","faire un pas de plus","être fier de toi",
+  "croire en toi-même","lâcher prise","accueillir tes émotions telles qu'elles sont",
+  "te reposer sans culpabilité","continuer malgré la fatigue","guérir à ton propre rythme",
+  "vivre honnêtement avec toi-même","reconstruire ta confiance","transformer la douleur en force",
+  "te reconnecter à toi-même","traverser cette vague","tenir encore une heure de plus",
+  "rester présent à ce moment","t'entourer de gens qui t'aident vraiment","célébrer ce petit pas",
+  "te relever après une chute","apprendre de cette journée difficile","protéger ta paix intérieure",
+  "dire non quand il le faut","écouter ce que ton corps te dit","ralentir un peu",
+  "te faire confiance de nouveau","choisir toi-même, pour une fois","revenir à tes raisons profondes",
+  "voir la lumière malgré la nuit","grandir à travers l'inconfort","rester fidèle à qui tu deviens",
+  "te libérer du poids du passé","avancer sans te comparer aux autres","honorer tout le chemin parcouru",
+  "accepter l'aide qu'on t'offre","te souvenir de ta propre force","construire ta paix un jour à la fois",
+  "faire la paix avec hier","être doux envers toi-même","choisir la vie que tu veux vraiment",
+  "t'accrocher à l'espoir","ouvrir la porte à demain","changer une habitude à la fois",
+  "reprendre ton souffle","te relever une fois de plus","cultiver ta patience envers toi-même",
+  "nourrir ta détermination","reconnaître tes progrès, même petits","accepter que certains jours soient plus durs",
+  "te rappeler pourquoi tu as commencé","écrire ce que tu ressens","marcher jusqu'à ce que le calme revienne",
+  "sourire à la personne que tu deviens","remercier ton corps de tenir bon","faire confiance au processus",
+  "reconnaître quand tu as besoin d'une pause","choisir la vérité plutôt que la fuite","rester debout un jour de plus",
+  "accueillir la fierté que tu mérites","bâtir une vie qui te ressemble","te détacher du besoin de tout contrôler",
+  "laisser le temps faire son travail","reconnaître les signaux avant qu'ils grandissent","t'ancrer dans le moment présent",
+  "respecter ton rythme de guérison","te rappeler que tu n'es pas seul","transformer chaque envie en une leçon",
+  "faire preuve de patience envers ton passé","accepter l'imperfection de ton parcours","te reconnecter à ce qui compte vraiment",
+  "t'offrir la même douceur qu'à un ami","reconnaître le courage qu'il faut pour continuer","laisser tomber ce qui ne te sert plus",
+  "te concentrer sur les prochaines 24 heures","reprendre confiance petit à petit","accueillir le silence sans le fuir",
+  "choisir la clarté plutôt que l'oubli","te rappeler qu'une rechute n'efface rien","célébrer chaque jour sobre comme il le mérite",
+  "t'entourer de ce qui te fait du bien","faire de la place pour la joie","reconnaître ta valeur au-delà du compteur",
+  "rester ancré dans tes raisons","transformer ta vulnérabilité en force","faire un geste sain, même petit",
+  "te souvenir que l'inconfort passe","choisir d'être présent pour les tiens","te libérer du regard des autres",
+  "avancer avec ce que tu as aujourd'hui","reconnaître que demander de l'aide est un acte de force","rester ouvert à recommencer",
+  "cultiver la gratitude envers ton propre chemin","te rappeler que chaque heure sobre compte","faire de ta sobriété une source de fierté",
+  "continuer, un souffle à la fois"
+];
+
+const AFFIRM_TEMPLATES = [
+  v => `Tu es capable de ${v}.`,
+  v => `Aujourd'hui, essaie simplement de ${v}.`,
+  v => `Tu mérites de ${v}, sans culpabilité.`,
+  v => `Continuer à ${v} est déjà une victoire.`,
+  v => `Il n'est pas trop tard pour ${v}.`,
+  v => `Ta force se révèle quand tu choisis de ${v}.`,
+  v => `Personne ne peut t'enlever ta capacité à ${v}.`,
+  v => `Tu n'as pas besoin d'être parfait pour ${v}.`,
+  v => `Le courage, aujourd'hui, ça peut juste être de ${v}.`,
+  v => `Tu apprends, un jour à la fois, à ${v}.`,
+  v => `Rien ne t'oblige à foncer — tu peux juste ${v}.`,
+  v => `Ce chemin t'apprend à ${v}, même dans les jours difficiles.`,
+  v => `Tu as le droit de prendre ton temps pour ${v}.`,
+  v => `Une bonne journée peut commencer simplement par ${v}.`,
+  v => `Tu n'as rien à prouver, seulement à ${v}.`,
+  v => `La vraie force, parfois, c'est d'oser ${v}.`,
+  v => `Tu peux choisir, là maintenant, de ${v}.`,
+  v => `Personne ne te demande d'être fort tout le temps — juste de ${v}.`,
+  v => `Ce que tu vis aujourd'hui t'apprend à ${v}.`,
+  v => `Tu es en train d'apprendre à ${v}.`,
+  v => `Un jour à la fois, tu retrouves la capacité de ${v}.`,
+  v => `Ta prochaine étape, c'est peut-être simplement de ${v}.`,
+  v => `Tu mérites l'espace nécessaire pour ${v}.`,
+  v => `Tu n'as pas à te presser pour ${v}.`,
+  v => `Il suffit parfois de ${v} pour changer ta journée.`,
+  v => `Tu as en toi tout ce qu'il faut pour ${v}.`,
+  v => `Sois fier de toi chaque fois que tu choisis de ${v}.`,
+  v => `Le rétablissement, c'est aussi apprendre à ${v}.`,
+  v => `Tu n'es pas seul quand tu choisis de ${v}.`,
+  v => `Ta guérison passe aussi par le fait de ${v}.`,
+  v => `Rappelle-toi que tu es capable de ${v}.`,
+  v => `Tu grandis chaque fois que tu acceptes de ${v}.`,
+  v => `Ce moment difficile ne t'empêche pas de ${v}.`,
+  v => `Tu as toujours le choix de ${v}.`,
+  v => `Prends un instant, là maintenant, pour ${v}.`,
+  v => `Ose ${v}, même si c'est difficile.`,
+  v => `Tu n'as pas besoin de permission pour ${v}.`,
+  v => `Ce que tu construis aujourd'hui, c'est ta capacité à ${v}.`,
+  v => `Tu es exactement où tu dois être pour ${v}.`,
+  v => `Essaie, aujourd'hui, simplement de ${v}.`,
+  v => `Ta force tranquille se voit quand tu choisis de ${v}.`,
+  v => `Tu peux, à ton rythme, ${v}.`,
+  v => `Ce n'est pas grave si tu as besoin de temps pour ${v}.`,
+  v => `Tu avances chaque fois que tu choisis de ${v}.`,
+  v => `Il n'y a pas de mal à vouloir juste ${v}.`,
+  v => `Tu as le pouvoir, aujourd'hui, de ${v}.`,
+  v => `Sois doux avec toi-même en apprenant à ${v}.`,
+  v => `Une petite victoire, aujourd'hui, ça peut être de ${v}.`,
+  v => `Tu n'as pas à tout réussir, seulement à ${v}.`,
+  v => `Ton courage se mesure aussi à ta capacité à ${v}.`
+];
+
+function buildGeneratedAffirmations(){
+  const out = [];
+  for(let t=0; t<AFFIRM_TEMPLATES.length; t++){
+    for(let w=0; w<AFFIRM_VERBS.length; w++){
+      out.push(AFFIRM_TEMPLATES[t](AFFIRM_VERBS[w]));
+    }
+  }
+  return out;
+}
+const generatedAffirmations = buildGeneratedAffirmations(); // 50 x 100 = 5000
+const combinedPool = quotes.concat(generatedAffirmations); // favoris : index 0-99 = classiques, 100+ = générées
+
 /* ---------- STORAGE (Claude preview + GitHub Pages compatible) ---------- */
 function loadData(){
   if(useClaudeStorage){
@@ -538,16 +820,19 @@ function saveData(){
   });
 }
 function daysBetween(start, now){ return (now - start) / (1000*60*60*24); }
+function todayISO(){ return new Date().toISOString().slice(0,10); }
 
 /* ---------- TABS ---------- */
+function switchTab(tabName){
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === tabName));
+  document.querySelectorAll('.tab-page').forEach(p => p.classList.toggle('active', p.id === 'page-' + tabName));
+  if(tabName === 'sos') renderSos();
+}
 document.querySelectorAll('.tab-btn').forEach(btn => {
-  btn.addEventListener('click', () => {
-    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-    document.querySelectorAll('.tab-page').forEach(p => p.classList.remove('active'));
-    btn.classList.add('active');
-    document.getElementById('page-' + btn.dataset.tab).classList.add('active');
-    if(btn.dataset.tab === 'sos') renderSos();
-  });
+  btn.addEventListener('click', () => switchTab(btn.dataset.tab));
+});
+document.querySelectorAll('a.sos-link[data-tab]').forEach(a => {
+  a.addEventListener('click', (e) => { e.preventDefault(); switchTab(a.dataset.tab); });
 });
 
 /* ---------- STARS / CLOUDS ---------- */
@@ -609,19 +894,23 @@ function render(){
     } else {
       document.getElementById('stat-money').textContent = '—';
     }
+    document.getElementById('stat-best').textContent = Math.max(data.bestStreak||0, wholeDays);
 
     renderMilestones(wholeDays);
     checkCelebration(wholeDays);
   }
+
+  document.getElementById('stat-checkins').textContent = (data.checkins||[]).length;
 
   const dayOfYear = Math.floor((today - new Date(today.getFullYear(),0,0)) / 86400000);
   document.getElementById('quote').textContent = quotes[dayOfYear % quotes.length];
 
   renderReasons();
   renderAffirmations();
+  renderMoodCheckin();
+  renderContacts();
   if(data.startDate) document.getElementById('start-date-input').value = data.startDate;
   if(data.dailyCost) document.getElementById('cost-input').value = data.dailyCost;
-  if(data.emergencyContact) document.getElementById('contact-input').value = data.emergencyContact;
 }
 
 function setSky(progress){
@@ -733,6 +1022,21 @@ document.getElementById('toggle-settings').addEventListener('click', () => {
 document.getElementById('save-date').addEventListener('click', () => {
   const val = document.getElementById('start-date-input').value;
   if(!val) return;
+
+  // Si une date de départ existait déjà et qu'on la change, on considère ça
+  // comme un nouveau départ : on garde une trace du parcours précédent
+  // sans jugement, et on met à jour le record personnel.
+  if(data.startDate && data.startDate !== val){
+    const prevStart = new Date(data.startDate + 'T00:00:00');
+    const prevDays = Math.max(0, Math.floor(daysBetween(prevStart, new Date())));
+    if(prevDays > 0){
+      data.streakHistory.push({ days: prevDays, endedAt: todayISO() });
+      if(data.streakHistory.length > 30) data.streakHistory = data.streakHistory.slice(-30);
+      data.bestStreak = Math.max(data.bestStreak || 0, prevDays);
+      showToast('💛 Nouveau départ. Ton record reste à ' + data.bestStreak + ' jour' + (data.bestStreak>1?'s':'') + '.');
+    }
+  }
+
   data.startDate = val;
   data.lastMilestoneCelebrated = 0;
   saveData().then(render);
@@ -742,29 +1046,206 @@ document.getElementById('save-cost').addEventListener('click', () => {
   data.dailyCost = val ? parseFloat(val) : null;
   saveData().then(render);
 });
-document.getElementById('save-contact').addEventListener('click', () => {
-  const val = document.getElementById('contact-input').value.trim();
-  data.emergencyContact = val;
-  saveData().then(render);
+
+/* ---------- CONTACTS DE CONFIANCE (multiples) ---------- */
+function renderContacts(){
+  const settingsList = document.getElementById('contact-list');
+  const sosList = document.getElementById('sos-contact-list');
+  const sosEmpty = document.getElementById('sos-contact-empty');
+  settingsList.innerHTML = '';
+  sosList.innerHTML = '';
+
+  if(!data.contacts || data.contacts.length === 0){
+    sosEmpty.classList.remove('hidden');
+  } else {
+    sosEmpty.classList.add('hidden');
+  }
+
+  (data.contacts || []).forEach((c, i) => {
+    const li = document.createElement('li');
+    li.className = 'contact-item';
+    li.innerHTML = '<div class="c-info"><span class="c-name">'+escapeHtml(c.name||'Contact')+'</span><span class="c-phone">'+escapeHtml(c.phone)+'</span></div><button data-i="'+i+'" aria-label="Retirer">✕</button>';
+    settingsList.appendChild(li);
+
+    const sosLi = document.createElement('li');
+    sosLi.className = 'contact-item';
+    sosLi.innerHTML = '<div class="c-info"><span class="c-name">'+escapeHtml(c.name||'Contact')+'</span></div><a class="c-call" href="tel:'+c.phone.replace(/[^0-9+]/g,'')+'">📞 Appeler</a>';
+    sosList.appendChild(sosLi);
+  });
+
+  settingsList.querySelectorAll('button').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const i = parseInt(btn.getAttribute('data-i'));
+      data.contacts.splice(i,1);
+      saveData().then(renderContacts);
+    });
+  });
+}
+document.getElementById('add-contact').addEventListener('click', () => {
+  const nameInput = document.getElementById('contact-name-input');
+  const phoneInput = document.getElementById('contact-phone-input');
+  const phone = phoneInput.value.trim();
+  if(!phone) return;
+  const name = nameInput.value.trim() || 'Contact de confiance';
+  data.contacts = data.contacts || [];
+  data.contacts.push({ name, phone });
+  nameInput.value = '';
+  phoneInput.value = '';
+  saveData().then(renderContacts);
+});
+
+/* ---------- ACTIVITÉS PERSONNALISÉES ---------- */
+document.getElementById('add-activity').addEventListener('click', () => {
+  const input = document.getElementById('activity-input');
+  const val = input.value.trim();
+  if(!val) return;
+  data.customActivities = data.customActivities || [];
+  data.customActivities.push(val);
+  input.value = '';
+  saveData().then(() => showToast('✅ Activité ajoutée à ton SOS'));
+});
+
+/* ---------- SAUVEGARDE / RESTAURATION ---------- */
+document.getElementById('export-data').addEventListener('click', () => {
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'aube-sauvegarde-' + todayISO() + '.json';
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+  showToast('⬇️ Sauvegarde téléchargée');
+});
+document.getElementById('import-data-btn').addEventListener('click', () => {
+  document.getElementById('import-data-file').click();
+});
+document.getElementById('import-data-file').addEventListener('change', (e) => {
+  const file = e.target.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = (evt) => {
+    try{
+      const imported = JSON.parse(evt.target.result);
+      data = Object.assign(data, imported);
+      migrateData();
+      saveData().then(() => {
+        render();
+        renderContacts();
+        showToast('✅ Sauvegarde restaurée');
+      });
+    }catch(err){
+      showToast('⚠️ Fichier invalide');
+    }
+  };
+  reader.readAsText(file);
+  e.target.value = '';
+});
+
+/* ---------- MOOD CHECK-IN ---------- */
+function renderMoodCheckin(){
+  data.checkins = data.checkins || [];
+  const today = todayISO();
+  const todayEntry = data.checkins.find(c => c.date === today);
+
+  document.querySelectorAll('.mood-btn').forEach(btn => {
+    btn.classList.toggle('selected', !!todayEntry && parseInt(btn.dataset.mood) === todayEntry.mood);
+  });
+
+  const note = document.getElementById('mood-done-note');
+  note.textContent = todayEntry ? 'Merci d\'avoir pris un moment pour ça aujourd\'hui.' : '';
+
+  // Warning based on 7-day rolling average
+  const warningBox = document.getElementById('mood-warning');
+  const warningText = document.getElementById('mood-warning-text');
+  const recent = data.checkins.slice(-7);
+  if(recent.length >= 3){
+    const avg = recent.reduce((s,c) => s + c.mood, 0) / recent.length;
+    if(avg <= 2.4){
+      warningText.textContent = "Tes derniers jours semblent plus difficiles. Ce serait peut-être le bon moment pour respirer un peu ou appeler quelqu'un.";
+      warningBox.classList.remove('hidden');
+    } else {
+      warningBox.classList.add('hidden');
+    }
+  } else {
+    warningBox.classList.add('hidden');
+  }
+}
+document.querySelectorAll('.mood-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const mood = parseInt(btn.dataset.mood);
+    const today = todayISO();
+    data.checkins = data.checkins || [];
+    const existing = data.checkins.find(c => c.date === today);
+    if(existing){ existing.mood = mood; } else { data.checkins.push({date: today, mood}); }
+    if(data.checkins.length > 60) data.checkins = data.checkins.slice(-60);
+    saveData().then(renderMoodCheckin);
+  });
+});
+
+/* ---------- ACTIVITY PICKER (SOS) ---------- */
+document.getElementById('activity-shuffle').addEventListener('click', () => {
+  const pool = ACTIVITIES.concat(data.customActivities || []);
+  let idx = Math.floor(Math.random()*pool.length);
+  if(idx === lastActivityIndex) idx = (idx+1) % pool.length;
+  lastActivityIndex = idx;
+  document.getElementById('activity-text').textContent = pool[idx];
 });
 
 /* ---------- AFFIRMATIONS TAB ---------- */
 let affirmFilter = 'all';
 let currentFlipIndex = 0;
+let exploreSearch = '';
+let exploreRenderCount = 60;
+const EXPLORE_BATCH = 60;
+
+function getExploreFilteredIndices(){
+  const term = exploreSearch.trim().toLowerCase();
+  const base = generatedAffirmations.map((_,i) => i + quotes.length); // indices globaux dans combinedPool
+  if(!term) return base;
+  return base.filter(gi => combinedPool[gi].toLowerCase().includes(term));
+}
 
 function renderAffirmations(){
   const list = document.getElementById('affirm-list');
+  const loadMoreBtn = document.getElementById('explore-load-more');
+  const searchRow = document.getElementById('explore-search-row');
+  const countNote = document.getElementById('explore-count-note');
   list.innerHTML = '';
-  const indices = quotes.map((_,i)=>i).filter(i => affirmFilter === 'all' || (data.favorites||[]).includes(i));
-  if(affirmFilter === 'fav' && indices.length === 0){
-    list.innerHTML = '<li class="affirm-item" style="justify-content:center;color:var(--paper-dim);font-style:italic;">Aucune favorite pour l\'instant — touche l\'étoile sur une affirmation.</li>';
-    return;
+  loadMoreBtn.classList.add('hidden');
+  searchRow.classList.add('hidden');
+  countNote.classList.add('hidden');
+
+  let indices = [];
+  if(affirmFilter === 'all'){
+    indices = quotes.map((_,i)=>i);
+  } else if(affirmFilter === 'fav'){
+    indices = (data.favorites||[]).slice().sort((a,b)=>a-b);
+    if(indices.length === 0){
+      list.innerHTML = '<li class="affirm-item" style="justify-content:center;color:var(--paper-dim);font-style:italic;">Aucune favorite pour l\'instant — touche l\'étoile sur une affirmation.</li>';
+      return;
+    }
+  } else if(affirmFilter === 'explore'){
+    searchRow.classList.remove('hidden');
+    const filtered = getExploreFilteredIndices();
+    countNote.textContent = filtered.length + ' affirmation' + (filtered.length>1?'s':'') + ' trouvée' + (filtered.length>1?'s':'');
+    countNote.classList.remove('hidden');
+    if(filtered.length === 0){
+      list.innerHTML = '<li class="affirm-item" style="justify-content:center;color:var(--paper-dim);font-style:italic;">Aucun résultat pour cette recherche.</li>';
+      return;
+    }
+    indices = filtered.slice(0, exploreRenderCount);
+    if(filtered.length > exploreRenderCount){
+      loadMoreBtn.classList.remove('hidden');
+    }
   }
+
   indices.forEach(i => {
     const li = document.createElement('li');
     li.className = 'affirm-item';
     const isFav = (data.favorites||[]).includes(i);
-    li.innerHTML = '<span class="a-num">#'+(i+1)+'</span><span>'+escapeHtml(quotes[i])+'</span><button data-i="'+i+'" class="'+(isFav?'starred':'')+'">'+(isFav?'★':'☆')+'</button>';
+    li.innerHTML = '<span class="a-num">#'+(i+1)+'</span><span>'+escapeHtml(combinedPool[i])+'</span><button data-i="'+i+'" class="'+(isFav?'starred':'')+'">'+(isFav?'★':'☆')+'</button>';
     list.appendChild(li);
   });
   list.querySelectorAll('button').forEach(btn => {
@@ -802,16 +1283,25 @@ document.getElementById('flip-shuffle').addEventListener('click', () => {
   showFlip(idx);
 });
 document.getElementById('flip-star').addEventListener('click', () => toggleFavorite(currentFlipIndex));
-document.getElementById('filter-all').addEventListener('click', () => {
-  affirmFilter = 'all';
-  document.getElementById('filter-all').classList.add('active');
-  document.getElementById('filter-fav').classList.remove('active');
+
+function setAffirmFilter(f){
+  affirmFilter = f;
+  document.getElementById('filter-all').classList.toggle('active', f === 'all');
+  document.getElementById('filter-fav').classList.toggle('active', f === 'fav');
+  document.getElementById('filter-explore').classList.toggle('active', f === 'explore');
+  if(f === 'explore') exploreRenderCount = EXPLORE_BATCH;
+  renderAffirmations();
+}
+document.getElementById('filter-all').addEventListener('click', () => setAffirmFilter('all'));
+document.getElementById('filter-fav').addEventListener('click', () => setAffirmFilter('fav'));
+document.getElementById('filter-explore').addEventListener('click', () => setAffirmFilter('explore'));
+document.getElementById('explore-search').addEventListener('input', (e) => {
+  exploreSearch = e.target.value;
+  exploreRenderCount = EXPLORE_BATCH;
   renderAffirmations();
 });
-document.getElementById('filter-fav').addEventListener('click', () => {
-  affirmFilter = 'fav';
-  document.getElementById('filter-fav').classList.add('active');
-  document.getElementById('filter-all').classList.remove('active');
+document.getElementById('explore-load-more').addEventListener('click', () => {
+  exploreRenderCount += EXPLORE_BATCH;
   renderAffirmations();
 });
 
@@ -824,15 +1314,18 @@ function renderSos(){
   } else {
     reasonEl.textContent = "Ajoute une raison dans l'accueil pour qu'elle apparaisse ici.";
   }
-  const callBtn = document.getElementById('sos-call-btn');
-  const emptyMsg = document.getElementById('sos-contact-empty');
-  if(data.emergencyContact){
-    callBtn.href = 'tel:' + data.emergencyContact.replace(/[^0-9+]/g,'');
-    callBtn.classList.remove('hidden');
-    emptyMsg.classList.add('hidden');
+  renderContacts();
+
+  let wholeDays = 0;
+  if(data.startDate){
+    wholeDays = Math.max(0, Math.floor(daysBetween(new Date(data.startDate + 'T00:00:00'), new Date())));
+  }
+  const best = Math.max(data.bestStreak||0, wholeDays);
+  const streakEl = document.getElementById('sos-streak-text');
+  if(best > 0){
+    streakEl.textContent = best + ' jour' + (best>1?'s':'') + ' — tu l\'as déjà fait, tu peux encore le faire.';
   } else {
-    callBtn.classList.add('hidden');
-    emptyMsg.classList.remove('hidden');
+    streakEl.textContent = "Chaque premier jour compte. Tu commences maintenant.";
   }
 }
 
@@ -882,6 +1375,7 @@ document.getElementById('breath-toggle').addEventListener('click', (e) => {
 
 /* ---------- INIT ---------- */
 loadData().then(() => {
+  migrateData();
   if(!data.startDate){
     const t = new Date();
     document.getElementById('start-date-input').value = t.toISOString().slice(0,10);
@@ -890,6 +1384,13 @@ loadData().then(() => {
   render();
   setInterval(render, 60000);
 });
+
+/* ---------- SERVICE WORKER (mode hors-ligne) ---------- */
+if('serviceWorker' in navigator){
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('sw.js').catch((err) => console.error('SW registration failed:', err));
+  });
+}
 </script>
 </body>
 </html>
